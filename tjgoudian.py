@@ -43,7 +43,7 @@ class TJGoudianLoginHelper(TJSSO):
                 bearer = result.group(1)
                 break
         else:
-            raise Warning("Bearer not found, please try again later.")
+            raise RuntimeError("Bearer not found, please try again later.")
 
         return bearer
 

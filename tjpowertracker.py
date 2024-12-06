@@ -12,6 +12,7 @@ class TJPowerTracker:
 
     bearer: str = ""
     session_id: str = ""
+    max_retry: int = 5
 
     def __post_init__(self):
         self.loginhelper = TJGoudianLoginHelper(
@@ -38,11 +39,33 @@ class TJPowerTracker:
 
         return response
 
-    def get_remaining(self, **kwargs):
+    def get_remaining(self, **kwargs) -> float:
         response = self._try_get_remaining(**kwargs)
-        if response.status_code != 200:
-            self.bearer = self.loginhelper.get_bearer()
-            self.session_id = self.loginhelper.get_session_id()
-            response = self._try_get_remaining(**kwargs)
+        for retrial in range(self.max_retry):
+            if response.status_code != 200:
+                self.bearer = self.loginhelper.get_bearer()
+                self.session_id = self.loginhelper.get_session_id()
+                response = self._try_get_remaining(**kwargs)
+            else:
+                break
 
-        return response.json()
+        else:
+            raise RuntimeError(f"Failed to get remaining power after {self.max_retry} retrials.")
+
+
+        # {
+        #     "result": {"next": "提示:每天早上9点更新", "remaining": 7.22},
+        #     "targetUrl": None,
+        #     "success": True,
+        #     "error": None,
+        #     "unAuthorizedRequest": False,
+        #     "__abp": True,
+        # }
+        content: dict = response.json()
+        if "result" in content.keys():
+            result: dict = content["result"]
+            if "remaining" in result.keys():
+                return float(result["remaining"])
+
+        raise RuntimeError("Failed to parse remaining power from response.")
+
