@@ -13,6 +13,7 @@ options = webdriver.ChromeOptions()
 options.browser_version = (
     "stable"  # This can trigger selenium to download the latest release of Chrome.
 )
+options.add_argument("--headless=new")
 
 options.timeouts = {"implicit": 10000}  # Wait for 10 seconds when finding an element.
 options.set_capability("goog:loggingPrefs", {"performance": "ALL"})
