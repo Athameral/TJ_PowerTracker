@@ -6,8 +6,6 @@ from config import Config
 from emailhelper import send_remaining
 import json
 
-with open("./cfg.json", encoding="UTF-8") as f:
-    config = Config(**json.load(f))
 
 tracker = TJPowerTracker(
     username=config.username,
@@ -19,7 +17,7 @@ def get_and_send():
     remaining = tracker.get_remaining()
     print(remaining)
     for recipient in config.email_list:
-        send_remaining(config.smtp_username, recipient, remaining, config.password)
+        send_remaining(config.smtp['username'], recipient, remaining, config.smtp['password'])
 
 
 scheduler = BlockingScheduler()
