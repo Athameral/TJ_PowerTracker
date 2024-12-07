@@ -55,8 +55,9 @@ class TJPowerTracker:
                 break
 
         else:
-            raise RuntimeError(f"Failed to get remaining power after {self.max_retry} retrials.")
-
+            raise RuntimeError(
+                f"Failed to get remaining power after {self.max_retry} retrials."
+            )
 
         # {
         #     "result": {"next": "提示:每天早上9点更新", "remaining": 7.22},
@@ -70,7 +71,8 @@ class TJPowerTracker:
         if "result" in content.keys():
             result: dict = content["result"]
             if "remaining" in result.keys():
-                logger.info(f"Got remaining={result["remaining"]} successfully.")
-                return float(result["remaining"])
+                remaining = float(result["remaining"])
+                logger.info(f"Got remaining={remaining} successfully.")
+                return remaining
 
         raise RuntimeError("Failed to parse remaining power from response.")
