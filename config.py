@@ -2,6 +2,9 @@ from dataclasses import dataclass
 from typing import TypedDict
 import re
 import json
+import logging
+
+logger = logging.getLogger(__name__)
 
 class SMTPConfig(TypedDict):
     server: str
@@ -31,3 +34,4 @@ class Config:
 
 with open("./cfg.json", encoding="UTF-8") as f:
     config = Config(**json.load(f))
+    logger.info(f"Config loaded successfully: username={config.username}")

@@ -2,9 +2,13 @@ from apscheduler.schedulers.blocking import BlockingScheduler
 from apscheduler.triggers.cron import CronTrigger
 from apscheduler.triggers.interval import IntervalTrigger
 from tjpowertracker import TJPowerTracker
-from config import Config
+from config import config
 from emailhelper import send_remaining
 import json
+import logging
+
+logger = logging.getLogger(__name__)
+logging.basicConfig(format="[{levelname}] {asctime} {name} {message}", style="{", level="INFO")
 
 
 tracker = TJPowerTracker(
@@ -21,6 +25,7 @@ def get_and_send():
 
 
 scheduler = BlockingScheduler()
-# scheduler.add_job(get_and_send, CronTrigger(hour=12))
-scheduler.add_job(get_and_send, IntervalTrigger(seconds=15))
+scheduler.add_job(get_and_send, CronTrigger(hour=12))
+# scheduler.add_job(get_and_send, IntervalTrigger(seconds=15))
+logging.info("Starting scheduler...")
 scheduler.start()

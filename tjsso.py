@@ -2,6 +2,9 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from os import environ
 from dataclasses import dataclass
+import logging
+
+logger = logging.getLogger(__name__)
 
 TJSSO_URI = (
     environ["TJSSO_URI"]
@@ -44,6 +47,7 @@ class TJSSO:
         self.driver.find_element(By.ID, "j_username").send_keys(self.username)
         self.driver.find_element(By.ID, "j_password").send_keys(self.password)
         self.driver.find_element(By.ID, "loginButton").click()
+        logger.info(f"TJSSO {self.username} logged in successfully.")
 
     def get_authorization_code(self, *, client_id: str, redirect_uri: str) -> str:
         raise NotImplementedError

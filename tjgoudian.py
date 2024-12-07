@@ -2,6 +2,9 @@ from tjsso import TJSSO, TJSSO_URI
 from urllib.parse import urlencode
 from time import sleep
 import re
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class TJGoudianLoginHelper(TJSSO):

@@ -1,6 +1,9 @@
 import requests
 from dataclasses import dataclass
 from tjgoudian import TJGoudianLoginHelper
+import logging
+
+logger = logging.getLogger(__name__)
 
 TJ_REMAINING_API_URI = "https://goudian.tongji.edu.cn/api/Room/Remaining"
 
@@ -43,7 +46,9 @@ class TJPowerTracker:
         response = self._try_get_remaining(**kwargs)
         for retrial in range(self.max_retry):
             if response.status_code != 200:
+                logger.info("Did not get code 200, trying getting a new bearer...")
                 self.bearer = self.loginhelper.get_bearer()
+                logger.info(f"Got bearer: {self.bearer}")
                 self.session_id = self.loginhelper.get_session_id()
                 response = self._try_get_remaining(**kwargs)
             else:
@@ -65,7 +70,7 @@ class TJPowerTracker:
         if "result" in content.keys():
             result: dict = content["result"]
             if "remaining" in result.keys():
+                logger.info(f"Got remaining={result["remaining"]} successfully.")
                 return float(result["remaining"])
 
         raise RuntimeError("Failed to parse remaining power from response.")
-
