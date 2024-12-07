@@ -15,7 +15,12 @@ options.browser_version = (
 )
 options.add_argument("--headless=new")
 
+# Prevents chrome from contaminating stdout
+options.add_argument("--log-level=3")
+
 options.timeouts = {"implicit": 10000}  # Wait for 10 seconds when finding an element.
+
+# This will be used to extract the log of requests
 options.set_capability("goog:loggingPrefs", {"performance": "ALL"})
 
 
