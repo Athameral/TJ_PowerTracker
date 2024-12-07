@@ -1,5 +1,6 @@
-from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.webdriver.chromium.webdriver import ChromiumDriver
+from selenium.webdriver.chromium.options import ChromiumOptions
 from os import environ
 from dataclasses import dataclass
 import logging
@@ -12,10 +13,8 @@ TJSSO_URI = (
     else "https://iam.tongji.edu.cn/idp/oauth2/authorize"
 )
 
-options = webdriver.ChromeOptions()
-options.browser_version = (
-    "stable"  # This can trigger selenium to download the latest release of Chrome.
-)
+options = ChromiumOptions()
+options.browser_version = "131.0.6778.108"  # This can trigger selenium to download the latest release of Chrome.
 options.add_argument("--headless=new")
 
 # Prevents chrome from contaminating stdout
@@ -40,7 +39,7 @@ class TJSSO:
     response_type: str = "code"
 
     def __post_init__(self) -> None:
-        self.driver = webdriver.Chrome(options=options)
+        self.driver = ChromiumDriver(options=options)
 
     def _login(self) -> None:
         """A simple implementation of login to SSO"""
